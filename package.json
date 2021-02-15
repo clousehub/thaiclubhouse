@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "date-fns": "^2.17.0",
+    "date-fns-tz": "^1.1.1",
+    "dotenv": "^8.2.0",
+    "got": "^11.8.1",
+    "make-promises-safe": "^5.1.0",
+    "metascraper": "^5.18.2",
+    "metascraper-description": "^5.18.2",
+    "metascraper-title": "^5.18.2",
+    "yargs": "^16.2.0"
+  },
+  "volta": {
+    "node": "15.8.0"
+  },
+  "devDependencies": {}
+}
