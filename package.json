@@ -13,5 +13,10 @@
   "volta": {
     "node": "15.8.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "firebase-tools": "^9.3.0"
+  },
+  "scripts": {
+    "deploy": "firebase deploy --token $FIREBASE_TOKEN"
+  }
 }

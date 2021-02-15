@@ -1,4 +1,23 @@
+<?php
+$data = json_decode(file_get_contents('data/store.json'), true);
 
+$dates = [];
+foreach ($data['events'] as $event) {
+    if (!empty($event['date'])) {
+        $cdate = substr($event['date'], 0, 10);
+        $dates[$cdate] = true;
+    }
+}
+
+$today = strftime("%Y-%m-%d");
+$past_dates = array_filter($dates, fn($d) => $d < $today, ARRAY_FILTER_USE_KEY);
+ksort($past_dates);
+
+function generate_page($target, $criteria)
+{
+    global $data;
+    ob_start();
+    ?>
 <!DOCTYPE html>
 <head>
   <meta charset="utf-8" />
@@ -26,48 +45,78 @@
   </header>
 
   <?php
-  $data = json_decode(file_get_contents('data/store.json'), true);
-  $events = array_filter((array)($data['events']), fn ($e) => !empty($e['date']) && $e['date'] >= '2021-02-15');
-  uksort($events, function ($a, $b) use ($events) {
-    return strcmp($events[$a]['date'], $events[$b]['date']);
-  });
-  ?>
-
-<?php function open_table() { ?>
+$events = array_filter(($data['events']), fn($e) => !empty($e['date']) && $criteria($e));
+    uksort($events, function ($a, $b) use ($events) {
+        return strcmp($events[$a]['date'], $events[$b]['date']);
+    });
+    ?>
   <table>
     <col width="72">
     <col width="100%">
     <tbody>
-<?php } ?>
-<?php function close_table() { ?>
-</tbody></table>
-    <?php } ?>
 
-    <?php open_table(); ?>
-    <?php $ldate = ''; $ltime='';?>
-  <?php foreach ($events as $k => $v) { ?>
+    <?php $ldate = '';
+    $ltime = '';?>
+  <?php foreach ($events as $k => $v) {?>
     <?php
-    $cdate = substr($v['date'],0,10);
-    if ($cdate != $ldate) {
-      ?>
-      <tr><th colspan=2><h2><?= $cdate ?></h2></th></tr>
+$cdate = substr($v['date'], 0, 10);
+        if ($cdate != $ldate) {
+            ?>
+      <tr><th colspan=2><h2><?=$cdate?></h2></th></tr>
       <?php
-      $ldate=$cdate;
-      $ltime='';
-    }
-    ?>
+$ldate = $cdate;
+            $ltime = '';
+        }
+        ?>
     <tr>
       <td>
-        <?php $ctime = substr($v['date'],11,5); ?>
-        <span style="opacity:<?= $ltime == $ctime ? 0 : 1 ?>"><?= $ctime ?></span>
-        <?php $ltime = $ctime; ?>
+        <?php $ctime = substr($v['date'], 11, 5);?>
+        <span style="opacity:<?=$ltime == $ctime ? 0 : 1?>"><?=$ctime?></span>
+        <?php $ltime = $ctime;?>
       </td>
       <td>
-        <strong><a href="https://www.joinclubhouse.com/event/<?= $k ?>"><?php echo htmlspecialchars($v['metadata']['title']); ?></a></strong><br />
+        <strong><a href="https://www.joinclubhouse.com/event/<?=$k?>"><?php echo htmlspecialchars($v['metadata']['title']); ?></a></strong><br />
         <?php echo preg_replace('~^(\S+\s+){6}~', '', htmlspecialchars($v['metadata']['description'])); ?>
       </td>
     </tr>
-  <?php } ?>
-  <?php close_table(); ?>
-  
+  <?php }?>
+</tbody></table>
+
+  <footer>
+    <?php
+print_footer();
+    ?>
+      </footer>
+
 </body>
+<?php
+$page = ob_get_clean();
+    echo "$target\n";
+    file_put_contents($target, $page);
+}
+
+function print_footer()
+{
+    global $past_dates;
+    $lmonth = '';
+    echo '<a href="./">Upcoming</a>';
+    foreach (array_keys($past_dates) as $date) {
+        $month = substr($date, 0, 7);
+        if ($month != $lmonth) {
+            echo " &middot; $month:";
+            $lmonth = $month;
+        }
+        $mday = substr($date, 8);
+        echo " <a href=$date.html>$mday</a>";
+    }
+    echo ' &middot; built by <a href="https://github.com/dtinth">dtinth</a>';
+}
+
+echo $today . "\n";
+generate_page('public/index.html', fn($e) => $e['date'] >= $today);
+
+foreach (array_keys($past_dates) as $date) {
+    generate_page('public/' . $date . '.html', fn($e) => substr($e['date'], 0, 10) == $date);
+}
+
+?>
