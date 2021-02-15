@@ -1,4 +1,14 @@
 <?php
+
+/*
+
+>>>>>>>>>>> CONTENT WARNING: UGLY CODE. <<<<<<<<<<<
+
+I built this site in a rush so the code is very bad.
+MANY BEST PRACTICES GETS THROWN OUT THE WINDOW!!!!
+
+ */
+
 $data = json_decode(file_get_contents('data/store.json'), true);
 
 $dates = [];
