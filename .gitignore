@@ -4,3 +4,5 @@
 /data/
 /.firebase
 *.log
+/public/index.html
+/public/20*
