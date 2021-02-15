@@ -77,6 +77,11 @@ $ldate = $cdate;
       <td>
         <strong><a href="https://www.joinclubhouse.com/event/<?=$k?>"><?php echo htmlspecialchars($v['metadata']['title']); ?></a></strong><br />
         <?php echo preg_replace('~^(\S+\s+){6}~', '', htmlspecialchars($v['metadata']['description'])); ?>
+        <?php
+foreach ($v['sources'] as $sourceUrl => $date) {
+            echo "<a style='opacity: 0.64; color: inherit' href='$sourceUrl'>[post]</a>";
+        }
+        ?>
       </td>
     </tr>
   <?php }?>
@@ -99,7 +104,7 @@ function print_footer()
 {
     global $past_dates;
     $lmonth = '';
-    echo '<a href="./">Upcoming</a>';
+    echo '<a href="./">Today and upcoming</a>';
     foreach (array_keys($past_dates) as $date) {
         $month = substr($date, 0, 7);
         if ($month != $lmonth) {
@@ -110,6 +115,7 @@ function print_footer()
         echo " <a href=$date.html>$mday</a>";
     }
     echo ' &middot; built by <a href="https://github.com/dtinth">dtinth</a>';
+    echo ' &middot; <a href="https://github.com/dtinth/thaiclubhouse">source</a>';
 }
 
 echo $today . "\n";
