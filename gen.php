@@ -102,6 +102,7 @@ print_footer();
 
 <!-- Initialize Firebase -->
 <script src="/__/firebase/init.js"></script>
+<script>firebase.analytics();</script>
 </body>
 <?php
 $page = ob_get_clean();
