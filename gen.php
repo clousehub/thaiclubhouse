@@ -50,8 +50,7 @@ function generate_page($target, $criteria)
   <header class="introduction">
     <h1>Clubhouse Thailand Community Calendar</h1>
     <p>
-      Post your event link in <a href="https://web.facebook.com/groups/clubhousethailandcommunity">Clubhouse Thailand Community Facebook Group</a>
-      and it will show up on this calendar. Updates hourly.
+      Post your <strong>scheduled</strong> event link in <a href="https://web.facebook.com/groups/clubhousethailandcommunity">Clubhouse Thailand Community Facebook Group</a> and it will show up on this calendar. Updates hourly.
     </p>
   </header>
 
