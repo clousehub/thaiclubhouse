@@ -10,7 +10,7 @@ foreach ($data['events'] as $event) {
 }
 
 $today = strftime("%Y-%m-%d");
-$past_dates = array_filter($dates, fn($d) => $d < $today, ARRAY_FILTER_USE_KEY);
+$past_dates = array_filter($dates, fn($d) => $d <= $today, ARRAY_FILTER_USE_KEY);
 ksort($past_dates);
 
 function generate_page($target, $criteria)
