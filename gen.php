@@ -28,9 +28,10 @@ function generate_page($target, $criteria)
   <title>Clubhouse Thailand Community Calendar</title>
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Clubhouse Thailand Community Calendar" />
+  <meta property="og:image" content="https://ss.dt.in.th/api/screenshots/thaiclubhouse.png" />
   <meta
     property="og:description"
-    content="Upcoming"
+    content="View upcoming Clubhouse events in Thailand here"
   />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">
   <script data-ad-client="ca-pub-3695878871927537" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
