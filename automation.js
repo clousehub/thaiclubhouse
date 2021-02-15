@@ -89,6 +89,9 @@ yargs
   })
   .command('update-events', '', {}, async () => {
     for (const [id, event] of Object.entries(store.events)) {
+      if (event.metadataUpdated) {
+        continue
+      }
       console.log(id)
       const { body, url } = await get(
         'https://www.joinclubhouse.com/event/' + id
@@ -97,6 +100,7 @@ yargs
       if (metadata.description.includes(' with ')) {
         event.metadata = metadata
       }
+      event.metadataUpdated ??= new Date().toJSON()
     }
     save()
   })
@@ -121,6 +125,8 @@ function parseDateFromDescription(description) {
   const tz = {
     '+07': 7 * 3600e3,
     CET: 1 * 3600e3,
+    EST: -5 * 3600e3,
+    AEST: 10 * 3600e3,
   }
   const tzmatch = tz[words[5]]
   if (words[3] === 'at' && tzmatch !== undefined) {
