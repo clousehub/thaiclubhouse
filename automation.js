@@ -47,7 +47,11 @@ yargs
       })
 
       for (const item of body.data) {
-        const search = (x) => {
+        const search = (
+          x,
+          src = item.permalink_url,
+          posted = item.created_time
+        ) => {
           if (!x) return
           for (const m of x.matchAll(
             /(joinclubhouse\.com|clublink\.to)\/event\/(\w+)/g
@@ -55,8 +59,8 @@ yargs
             const id = m[2]
             const event = (store.events[id] ??= {})
             event.sources ??= {}
-            event.sources[item.permalink_url] ??= {}
-            event.sources[item.permalink_url].created_time ??= item.created_time
+            event.sources[src] ??= {}
+            event.sources[src].created_time ??= posted
           }
           for (const m of x.matchAll(
             /(joinclubhouse\.com|clublink\.to)\/room\/(\w+)/g
@@ -64,13 +68,17 @@ yargs
             const id = m[2]
             const room = (store.rooms[id] ??= {})
             room.sources ??= {}
-            room.sources[item.permalink_url] ??= {}
-            room.sources[item.permalink_url].created_time ??= item.created_time
+            room.sources[src] ??= {}
+            room.sources[src].created_time ??= posted
           }
         }
         search(item.message)
         for (const a of item.attachments?.data ?? []) {
           search(a.unshimmed_url)
+          search(a.description)
+        }
+        for (const a of item.comments?.data ?? []) {
+          search(a.message, a.permalink_url, a.created_time)
         }
         save()
       }
@@ -81,7 +89,7 @@ yargs
     }
     await fetchPosts(
       'https://graph.facebook.com/v9.0/430909721296190/feed' +
-        '?fields=id%2Cmessage%2Ccreated_time%2Cmessage_tags%2Cdescription%2Cname%2Cvia%2Cpermalink_url%2Cattachments%7Btype%2Ctitle%2Curl%2Cunshimmed_url%2Cdescription%7D' +
+        '?fields=id%2Cmessage%2Ccreated_time%2Cmessage_tags%2Cdescription%2Cname%2Cvia%2Cpermalink_url%2Cattachments%7Btype%2Ctitle%2Curl%2Cunshimmed_url%2Cdescription%7D%2Ccomments.limit(10).order(reverse_chronological)%7Bmessage%2Cpermalink_url%7D' +
         '&limit=100' +
         '&access_token=' +
         process.env.FB_ACCESS_TOKEN
