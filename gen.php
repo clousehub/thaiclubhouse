@@ -23,7 +23,7 @@ $today = strftime("%Y-%m-%d");
 $past_dates = array_filter($dates, fn($d) => $d <= $today, ARRAY_FILTER_USE_KEY);
 ksort($past_dates);
 
-function generate_page($target, $criteria)
+function generate_page($target, $criteria, $socialDate)
 {
     global $data;
     ob_start();
@@ -38,7 +38,7 @@ function generate_page($target, $criteria)
   <title>Clubhouse Thailand Community Calendar</title>
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Clubhouse Thailand Community Calendar" />
-  <meta property="og:image" content="https://ss.dt.in.th/api/screenshots/thaiclubhouse.png" />
+  <meta property="og:image" content="https://ss.dt.in.th/api/screenshots/thaiclubhouse.png?date=<?=$socialDate;?>" />
   <meta
     property="og:description"
     content="View upcoming Clubhouse events in Thailand here"
@@ -50,7 +50,7 @@ function generate_page($target, $criteria)
   <header class="introduction">
     <h1>Clubhouse Thailand Community Calendar</h1>
     <p>
-      Post your <strong>scheduled</strong> event link in <a href="https://web.facebook.com/groups/clubhousethailandcommunity">Clubhouse Thailand Community Facebook Group</a> and it will show up on this calendar. Updates hourly.
+      Post your <strong>scheduled</strong> event link in <a href="https://web.facebook.com/groups/clubhousethailandcommunity">Clubhouse Thailand Community Facebook Group</a> (or comment with event link in any post inside the group) and it will show up on this calendar. Updates hourly.
     </p>
   </header>
 
@@ -61,7 +61,7 @@ $events = array_filter(($data['events']), fn($e) => !empty($e['date']) && $crite
     });
     ?>
   <table>
-    <col width="72">
+    <col width="64">
     <col width="100%">
     <tbody>
 
@@ -79,7 +79,7 @@ $ldate = $cdate;
         }
         ?>
     <tr>
-      <td>
+      <td nowrap>
         <?php $ctime = substr($v['date'], 11, 5);?>
         <span style="opacity:<?=$ltime == $ctime ? 0 : 1?>"><?=$ctime?></span>
         <?php $ltime = $ctime;?>
@@ -89,7 +89,7 @@ $ldate = $cdate;
         <?php echo preg_replace('~^(\S+\s+){6}~', '', htmlspecialchars($v['metadata']['description'])); ?>
         <?php
 foreach ($v['sources'] as $sourceUrl => $date) {
-            echo "<a style='opacity: 0.64; color: inherit' href='$sourceUrl'>[post]</a>";
+            echo "<a style='opacity: 0.64; color: inherit' href='$sourceUrl'>[ref]</a>";
         }
         ?>
       </td>
@@ -134,14 +134,16 @@ function print_footer()
         echo " <a href=$date.html>$mday</a>";
     }
     echo ' &middot; built by <a href="https://github.com/dtinth">dtinth</a>';
-    echo ' &middot; <a href="https://github.com/dtinth/thaiclubhouse">source</a>';
+    echo ' &middot; <a href="https://github.com/clousehub/thaiclubhouse">source code</a>';
+    echo ' &middot; <a href="https://github.com/clousehub/thaiclubhouse-data">json</a>';
+    echo ' &middot; <a href="https://www.facebook.com/groups/clubhousethailandcommunity/permalink/434602387593590/">report issue</a>';
 }
 
 echo $today . "\n";
-generate_page('public/index.html', fn($e) => $e['date'] >= $today);
+generate_page('public/index.html', fn($e) => $e['date'] >= $today, $today);
 
 foreach (array_keys($past_dates) as $date) {
-    generate_page('public/' . $date . '.html', fn($e) => substr($e['date'], 0, 10) == $date);
+    generate_page('public/' . $date . '.html', fn($e) => substr($e['date'], 0, 10) == $date, $date);
 }
 
 ?>
