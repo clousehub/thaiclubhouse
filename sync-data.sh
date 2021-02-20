@@ -1,8 +1,10 @@
 #!/bin/bash -e
 
+COMMIT_MESSAGE="$(node automation.js generate-store-commit-message)"
+
 cd data
 git add store.json
-git commit -m 'Update data state
+git commit -m "$COMMIT_MESSAGE
 
-Disclaimer: This commit contains user-generated contents and is not moderated.' || true
+Disclaimer: This commit contains user-generated contents and is not moderated." || true
 git push -f

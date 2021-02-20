@@ -23,7 +23,7 @@ $today = strftime("%Y-%m-%d");
 $past_dates = array_filter($dates, fn($d) => $d <= $today, ARRAY_FILTER_USE_KEY);
 ksort($past_dates);
 
-function generate_page($target, $criteria, $socialDate)
+function generate_page($target, $criteria, $socialDate, $mode)
 {
     global $data;
     ob_start();
@@ -48,11 +48,21 @@ function generate_page($target, $criteria, $socialDate)
 </head>
 <body>
   <header class="introduction">
-    <h1>Clubhouse Thailand Community Calendar</h1>
-    <p>
+    <h1>👋 thaiclubhouse.web.app <small style="display: block; opacity: 0.5; font-weight: normal; font-size: 0.75em;"><a href="https://web.facebook.com/groups/clubhousethailandcommunity" style="color: inherit">Clubhouse Thailand Community</a> Calendar</small></h1>
+    <!-- p>
       Post your <strong>scheduled</strong> event link in <a href="https://web.facebook.com/groups/clubhousethailandcommunity">Clubhouse Thailand Community Facebook Group</a> (or comment with event link in any post inside the group) and it will show up on this calendar. Updates hourly.
-    </p>
+    </p -->
   </header>
+
+  <?php if ($mode == 'home') {?>
+  <div style="background: #f5e5d1; padding: 12px; border-radius: 5px; display: flex;">
+    <div style="flex: none;">ℹ️</div>
+    <p style="margin: 0 0 0 1em; flex: 1;">
+      <strong><a href="https://docs.google.com/forms/d/e/1FAIpQLScor_K1u6GZG_JJWLyxTfC4T72smZftcKBn2_ZudlESyQdx9w/viewform?usp=sf_link">คลิกที่นี่เพื่อเพิ่มอีเว้นต์ในหน้านี้</a></strong>
+      <!-- span style="opacity: 0.5">(ขณะนี้ระบบดึงข้อมูลจาก <a href="https://web.facebook.com/groups/clubhousethailandcommunity">Facebook Group</a> ขัดข้อง)</span -->
+    </p>
+  </div>
+  <?php }?>
 
   <?php
 $events = array_filter(($data['events']), fn($e) => !empty($e['date']) && $criteria($e));
@@ -133,17 +143,18 @@ function print_footer()
         $mday = substr($date, 8);
         echo " <a href=$date.html>$mday</a>";
     }
-    echo ' &middot; built by <a href="https://github.com/dtinth">dtinth</a>';
+    echo '<br>built by <a href="https://github.com/dtinth">dtinth</a>';
     echo ' &middot; <a href="https://github.com/clousehub/thaiclubhouse">source code</a>';
     echo ' &middot; <a href="https://github.com/clousehub/thaiclubhouse-data">json</a>';
     echo ' &middot; <a href="https://www.facebook.com/groups/clubhousethailandcommunity/permalink/434602387593590/">report issue</a>';
+    echo '<br><a href="https://web.facebook.com/groups/clubhousethailandcommunity">Clubhouse Thailand Community Facebook Group</a>';
 }
 
 echo $today . "\n";
-generate_page('public/index.html', fn($e) => $e['date'] >= $today, $today);
+generate_page('public/index.html', fn($e) => $e['date'] >= $today, $today, 'home');
 
 foreach (array_keys($past_dates) as $date) {
-    generate_page('public/' . $date . '.html', fn($e) => substr($e['date'], 0, 10) == $date, $date);
+    generate_page('public/' . $date . '.html', fn($e) => substr($e['date'], 0, 10) == $date, $date, 'archive');
 }
 
 ?>
