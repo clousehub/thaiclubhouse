@@ -68,6 +68,7 @@ function generate_page($target, $criteria, $socialDate, $mode)
     <div style="flex: none;">ℹ️</div>
     <p style="margin: 0 0 0 1em; flex: 1;">
       <strong><a href="https://docs.google.com/forms/d/e/1FAIpQLScor_K1u6GZG_JJWLyxTfC4T72smZftcKBn2_ZudlESyQdx9w/viewform?usp=sf_link">คลิกที่นี่เพื่อเพิ่มอีเว้นต์ในหน้านี้</a></strong>
+      หรือทวีตลิงค์ติดแฮชแท็ก <a href="https://twitter.com/search?q=%23ClubhouseTH">#ClubhouseTH</a> <a href="https://twitter.com/search?q=%23%E0%B9%84%E0%B8%97%E0%B8%A2%E0%B8%84%E0%B8%A5%E0%B8%B1%E0%B8%9A%E0%B9%80%E0%B8%AE%E0%B9%89%E0%B8%B2%E0%B8%AA%E0%B9%8C">#ไทยคลับเฮ้าส์</a>
       <!-- span style="opacity: 0.5">(ขณะนี้ระบบดึงข้อมูลจาก <a href="https://web.facebook.com/groups/clubhousethailandcommunity">Facebook Group</a> ขัดข้อง)</span -->
     </p>
   </div>
