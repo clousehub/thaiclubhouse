@@ -172,6 +172,8 @@ yargs
             search(entity.expanded_url, url, date)
           }
         }
+        const minDate = statuses.map(s => new Date(s.created_at).toJSON()).reduce((a, b) => a < b ? a : b)
+        console.log(`${query}: ${minDate}`)
       } catch (error) {
         console.error('Unable to search for "%s"', query, error)
       }
