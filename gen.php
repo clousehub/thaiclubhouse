@@ -9,8 +9,9 @@ MANY BEST PRACTICES GETS THROWN OUT THE WINDOW!!!!
 
  */
 
-$data = json_decode(file_get_contents('data/store.json'), true);
+require 'vendor/autoload.php';
 
+$data = json5_decode(iconv('utf-8', 'utf-8//IGNORE', file_get_contents('data/store.json')), true, 512, JSON_INVALID_UTF8_SUBSTITUTE | JSON_INVALID_UTF8_IGNORE);
 $dates = [];
 foreach ($data['events'] as $event) {
     if (!empty($event['date'])) {

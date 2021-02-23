@@ -1,0 +1,5 @@
+{
+    "require": {
+        "colinodell/json5": "^2.2"
+    }
+}
