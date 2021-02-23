@@ -13,8 +13,6 @@ const crypto = require('crypto')
 const execa = require('execa')
 const got = require('got').default
 
-// const store = JSON.parse(fs.readFileSync('data/store.json', 'utf8'))
-
 const store = {}
 for (const file of require('glob').sync('data/store_shards/*.json')) {
   _.merge(store, JSON.parse(fs.readFileSync(file, 'utf8')))
@@ -35,8 +33,6 @@ async function get(url) {
 }
 
 function save() {
-  fs.writeFileSync('data/store.json', JSON.stringify(store, null, 2), 'utf8')
-
   const files = {}
   for (const [outer, outerContents] of Object.entries(store)) {
     for (const [inner, innerContents] of Object.entries(outerContents)) {
