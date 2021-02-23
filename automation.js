@@ -35,7 +35,7 @@ async function get(url) {
 }
 
 function save() {
-  // fs.writeFileSync('data/store.json', JSON.stringify(store, null, 2), 'utf8')
+  fs.writeFileSync('data/store.json', JSON.stringify(store, null, 2), 'utf8')
 
   const files = {}
   for (const [outer, outerContents] of Object.entries(store)) {
