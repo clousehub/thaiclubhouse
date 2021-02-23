@@ -33,6 +33,21 @@
 # Clone data repository
 git clone https://github.com/clousehub/thaiclubhouse-data.git data
 
+```
+# Install PHP CLI and composeer
+
+**Ubuntu**
+``` sh
+sudo apt install -y php-7.4 php7.4-mbstring # required for json5 lib
+sudo curl -sS https://getcomposer.org/installer | php
+mv composer.phar /usr/local/bin/composer
+```
+
+# Install dependencies
+```sh
+composer install
+```
+
 # Compile
 php gen.php
 ```
