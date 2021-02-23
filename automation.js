@@ -114,7 +114,7 @@ yargs
       }
       save()
       const nextPage = body.paging?.next
-      if (nextPage && page < 2) {
+      if (nextPage && page < 1) {
         await fetchPosts(nextPage, page + 1)
       }
     }
