@@ -51,6 +51,7 @@ function generate_page($target, $criteria, $socialDate, $mode)
   />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">
   <script data-ad-client="ca-pub-3695878871927537" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <script defer src="js/index.js"></script>
 </head>
 <body>
   <header class="introduction">

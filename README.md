@@ -23,6 +23,10 @@
   - Runs periodically via cron
   - See [cron.sh](cron.sh)
 
+- **Client-side JavaScript**
+  - Enhances the experience of using the app
+  - See [public/js/index.js](public/js/index.js)
+
 ## Website development
 
 ```sh
