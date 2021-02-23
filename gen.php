@@ -107,7 +107,7 @@ $events = array_filter(($data['events']), fn($e) => !empty($e['date']) && $crite
 $cdate = substr($v['date'], 0, 10);
         if ($cdate != $ldate) {
             ?>
-      <tr><th colspan=2><h2><?=date('w', format_date($cdate)) ?></h2></th></tr>
+      <tr><th colspan=2><h2><?=format_date($cdate) ?></h2></th></tr>
       <?php
 $ldate = $cdate;
             $ltime = '';
