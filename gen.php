@@ -50,6 +50,14 @@ function generate_page($target, $criteria, $socialDate, $mode)
 <body>
   <header class="introduction">
     <h1>👋 thaiclubhouse.web.app <small style="display: block; opacity: 0.5; font-weight: normal; font-size: 0.75em;"><a href="https://web.facebook.com/groups/clubhousethailandcommunity" style="color: inherit">Clubhouse Thailand Community</a> Calendar</small></h1>
+    <style>
+      @media (max-width: 720px) {
+        h1 { font-size: 1.5em; }
+      }
+      @media (max-width: 360px) {
+        h1 { font-size: 1.25em; }
+      }
+    </style>
     <!-- p>
       Post your <strong>scheduled</strong> event link in <a href="https://web.facebook.com/groups/clubhousethailandcommunity">Clubhouse Thailand Community Facebook Group</a> (or comment with event link in any post inside the group) and it will show up on this calendar. Updates hourly.
     </p -->
