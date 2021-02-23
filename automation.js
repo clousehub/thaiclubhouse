@@ -126,6 +126,35 @@ yargs
     }
     save()
   })
+  .command('update-links-from-twitter', '', {}, async () => {
+    const bearerToken = await getTwitterBearerToken()
+    const searchTwitter = async (query) => {
+      try {
+        const url = `https://api.twitter.com/1.1/search/tweets.json?q=${encodeURIComponent(query + ' -filter:retweets filter:links')}&result_type=recent&count=100&include_entities=true&tweet_mode=extended`
+        const { body: { statuses } } = await got(url, {
+          responseType: 'json',
+          headers: {
+            'Authorization': `Bearer ${bearerToken}`
+          }
+        }).catch(handleNetworkError('Unable to search Twitter'))
+        for (const status of statuses) {
+          const url = `https://twitter.com/${status.user.screen_name}/status/${status.id_str}`
+          const date = new Date(status.created_at).toJSON()
+          if (date < new Date(Date.now() - 86400e3).toJSON()) {
+            continue
+          }
+          for (const entity of status.entities?.urls ?? []) {
+            search(entity.expanded_url, url, date)
+          }
+        }
+      } catch (error) {
+        console.error('Unable to search for "%s"', query, error)
+      }
+    }
+    await searchTwitter('#ไทยคลับเฮ้าส์')
+    await searchTwitter('#ClubhouseTH')
+    save()
+  })
   .command('update-events', '', {}, async () => {
     for (const [id, event] of Object.entries(store.events)) {
       if (event.metadataUpdated) {
@@ -165,15 +194,18 @@ yargs
 function parseDateFromDescription(description) {
   const words = description.split(' ')
   const tz = {
+    PST: -8 * 3600e3,
+    MST: -7 * 3600e3,
+    EST: -5 * 3600e3,
+    WET: 0,
+    GMT: 0,
+    CET: 1 * 3600e3,
     '+07': 7 * 3600e3,
     WIB: 7 * 3600e3,
+    '+08': 8 * 3600e3,
     JST: 9 * 3600e3,
-    WET: 0,
-    CET: 1 * 3600e3,
-    EST: -5 * 3600e3,
-    MST: -7 * 3600e3,
-    PST: -8 * 3600e3,
     AEST: 10 * 3600e3,
+    AEDT: 11 * 3600e3,
   }
   const tzmatch = tz[words[5]]
   if (words[3] === 'at' && tzmatch !== undefined) {
@@ -200,5 +232,28 @@ function parseDateFromDescription(description) {
       ) - tzmatch
 
     return new Date(time + 7 * 3600e3).toISOString().replace('Z', '+07:00')
+  }
+}
+
+async function getTwitterBearerToken() {
+  const url = 'https://api.twitter.com/oauth2/token'
+  const { body } = await got(url, {
+    responseType: 'json',
+    method: 'POST',
+    form: {
+      grant_type: 'client_credentials'
+    },
+    username: process.env.TWITTER_CONSUMER_KEY,
+    password: process.env.TWITTER_CONSUMER_SECRET
+  }).catch(handleNetworkError('Unable to get Twitter Bearer Token'))
+  return body.access_token
+}
+
+function handleNetworkError(name) {
+  return e => {
+    const body = e.response?.body
+    console.error('Error:', body)
+    e.message = `${name}: ${e.message}`
+    throw e
   }
 }
