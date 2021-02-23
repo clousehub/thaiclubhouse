@@ -28,6 +28,15 @@ foreach ($data['events'] as $event) {
 $today = strftime("%Y-%m-%d");
 $past_dates = array_filter($dates, fn($d) => $d <= $today, ARRAY_FILTER_USE_KEY);
 ksort($past_dates);
+function get_day_of_week_from_date_str($datestr)
+{
+  return getdate(date('w', strtotime($datestr)));
+}
+
+function format_date($datestr)
+{
+  return  get_day_of_week_from_date_str($datestr).$datestr;
+}
 
 function generate_page($target, $criteria, $socialDate, $mode)
 {
@@ -98,7 +107,7 @@ $events = array_filter(($data['events']), fn($e) => !empty($e['date']) && $crite
 $cdate = substr($v['date'], 0, 10);
         if ($cdate != $ldate) {
             ?>
-      <tr><th colspan=2><h2><?=$cdate?></h2></th></tr>
+      <tr><th colspan=2><h2><?=date('w', format_date($cdate)) ?></h2></th></tr>
       <?php
 $ldate = $cdate;
             $ltime = '';
