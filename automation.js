@@ -2,6 +2,7 @@ require('make-promises-safe')
 require('dotenv').config()
 
 const yargs = require('yargs')
+const _ = require('lodash')
 
 const metascraper = require('metascraper')([
   require('metascraper-description')(),
@@ -9,8 +10,15 @@ const metascraper = require('metascraper')([
 ])
 const fs = require('fs')
 const crypto = require('crypto')
+const execa = require('execa')
 const got = require('got').default
-const store = JSON.parse(fs.readFileSync('data/store.json', 'utf8'))
+
+// const store = JSON.parse(fs.readFileSync('data/store.json', 'utf8'))
+
+const store = {}
+for (const file of require('glob').sync('data/store_shards/*.json')) {
+  _.merge(store, JSON.parse(fs.readFileSync(file, 'utf8')))
+}
 
 async function get(url) {
   const hash = crypto.createHash('md5').update(url).digest('hex')
@@ -27,7 +35,28 @@ async function get(url) {
 }
 
 function save() {
-  fs.writeFileSync('data/store.json', JSON.stringify(store, null, 2), 'utf8')
+  // fs.writeFileSync('data/store.json', JSON.stringify(store, null, 2), 'utf8')
+
+  const files = {}
+  for (const [outer, outerContents] of Object.entries(store)) {
+    for (const [inner, innerContents] of Object.entries(outerContents)) {
+      const filename = `${outer}_${inner.slice(-1)}`.toLowerCase() + '.json'
+      _.merge(files, {
+        [filename]: {
+          [outer]: {
+            [inner]: innerContents
+          }
+        }
+      })
+    }
+  }
+  let totalSize = 0
+  for (const [filename, fileContents] of Object.entries(files)) {
+    const buffer = Buffer.from( JSON.stringify(fileContents, null, 2))
+    totalSize += buffer.length
+    fs.writeFileSync('data/store_shards/' + filename, buffer, 'utf8')
+  }
+  console.log('Written %d bytes to %d files', totalSize, Object.keys(files).length)
 }
 
 const fromAmPm = (n, pm) => {
@@ -186,8 +215,10 @@ yargs
     }
     save()
   })
-  .command('generate-store-commit-message', '', {}, () => {
-    console.log('Update data state (data size: ' + (fs.statSync('data/store.json').size / 1024).toFixed(1) + ' KB)')
+  .command('generate-store-commit-message', '', {}, async () => {
+    process.stdout.write('Update data state ')
+    const bytes = +(await execa('du --bytes --summarize data/store_shards', { shell: true })).stdout.match(/\d+/)[0]
+    process.stdout.write('(data size: ' + (bytes / 1024).toFixed(1) + ' KB)\n')
   })
   .parse()
 
