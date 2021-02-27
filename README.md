@@ -38,8 +38,7 @@ git clone https://github.com/clousehub/thaiclubhouse-data.git data
 
 **Ubuntu**
 ``` sh
-sudo apt install -y php-7.4 php7.4-mbstring # required for json5 lib
-sudo curl -sS https://getcomposer.org/installer | php
+sudo apt install -y php-7.4 php7.4-mbstring composer
 mv composer.phar /usr/local/bin/composer
 ```
 
