@@ -27,11 +27,34 @@
   - Enhances the experience of using the app
   - See [public/js/index.js](public/js/index.js)
 
-## Website development
+# Website development
 
+## Clone data repository
 ```sh
 # Clone data repository
 git clone https://github.com/clousehub/thaiclubhouse-data.git data
+
+```
+## Install PHP CLI and composeer
+
+**Ubuntu**
+``` sh
+sudo apt install -y php-7.4 php7.4-mbstring composer
+```
+
+**Mac**
+MacOS has a default php version, so we need to run `brew link` and append the installed version to path.
+```sh
+brew install php@7.4 composer
+brew link php@7.4
+echo 'export PATH="/usr/local/opt/php@7.4/bin:$PATH"' >> ~/.zshrc # or ~/.bashrc
+echo 'export PATH="/usr/local/opt/php@7.4/sbin:$PATH"' >> ~/.zshrc # or ~/.bashrc
+```
+
+# Install dependencies
+```sh
+composer install
+```
 
 # Compile
 php gen.php

@@ -7,3 +7,4 @@
 /public/index.html
 /public/20*
 /vendor/
+.phpunit.result.cache
