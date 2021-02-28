@@ -234,6 +234,19 @@ yargs
     const bytes = +(await execa('du --bytes --summarize data/store_shards', { shell: true })).stdout.match(/\d+/)[0]
     process.stdout.write('(data size: ' + (bytes / 1024).toFixed(1) + ' KB)\n')
   })
+  .command('ingest-active-room', '', {}, async () => {
+    const threshold = new Date(Date.now() - 3600e3)
+    for (const [id, room] of Object.entries(store.rooms)) {
+      const maxTime = Math.max(
+        ...Object.values(room.sources).map((source) =>
+          Date.parse(source.created_time)
+        )
+      )
+      if (maxTime >= threshold) {
+        console.log(id)
+      }
+    }
+  })
   .parse()
 
 function parseDateFromDescription(description) {
