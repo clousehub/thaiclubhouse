@@ -1,5 +1,8 @@
 {
     "require": {
         "colinodell/json5": "^2.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
     }
 }
