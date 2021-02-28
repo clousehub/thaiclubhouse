@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "live": {
+      ".read": true,
+      ".write": false
+    }
+  }
+}
