@@ -64,7 +64,9 @@ const fromAmPm = (n, pm) => {
 const search = (
   x,
   src,
-  posted
+  posted,
+  metadata = {},
+  metadataUpdates = {},
 ) => {
   if (!x) return
   for (const m of x.matchAll(
@@ -75,6 +77,7 @@ const search = (
     event.sources ??= {}
     event.sources[src] ??= {}
     event.sources[src].created_time ??= posted
+    addMetadata(event.sources[src])
   }
   for (const m of x.matchAll(
     /(joinclubhouse\.com|clublink\.to)(?:\/|%2F)room(?:\/|%2F)(\w+)/g
@@ -84,6 +87,16 @@ const search = (
     room.sources ??= {}
     room.sources[src] ??= {}
     room.sources[src].created_time ??= posted
+    addMetadata(room.sources[src])
+  }
+
+  function addMetadata(target) {
+    for (const [key, value] of Object.entries(metadata)) {
+      target[key] ??= value
+    }
+    for (const [key, value] of Object.entries(metadataUpdates)) {
+      target[key] = value
+    }
   }
 }
 
@@ -169,7 +182,10 @@ yargs
             continue
           }
           for (const entity of status.entities?.urls ?? []) {
-            search(entity.expanded_url, url, date)
+            search(entity.expanded_url, url, date, {}, {
+              retweet_count: status.retweet_count,
+              favorite_count: status.favorite_count,
+            })
           }
         }
         const minDate = statuses.map(s => new Date(s.created_at).toJSON()).reduce((a, b) => a < b ? a : b)
@@ -234,6 +250,7 @@ function parseDateFromDescription(description) {
     '+08': 8 * 3600e3,
     JST: 9 * 3600e3,
     AEST: 10 * 3600e3,
+    ACDT: 10.5 * 3600e3,
     AEDT: 11 * 3600e3,
   }
   const tzmatch = tz[words[5]]
