@@ -10,7 +10,6 @@ MANY BEST PRACTICES GETS THROWN OUT THE WINDOW!!!!
  */
 
 require 'vendor/autoload.php';
-require './src/date_format.php';
 
 if (!file_exists('data')) die('No data directory found, please run `git clone https://github.com/clousehub/thaiclubhouse-data.git data`');
 
