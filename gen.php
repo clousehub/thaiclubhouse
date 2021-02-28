@@ -11,6 +11,8 @@ MANY BEST PRACTICES GETS THROWN OUT THE WINDOW!!!!
 
 require 'vendor/autoload.php';
 
+if (!file_exists('data')) die('No data directory found, please run `git clone https://github.com/clousehub/thaiclubhouse-data.git data`');
+
 $shards = [];
 foreach (glob('data/store_shards/*.json') as $filename) {
     $shards[] = json5_decode(iconv('utf-8', 'utf-8//IGNORE', file_get_contents($filename)), true, 512, JSON_INVALID_UTF8_SUBSTITUTE | JSON_INVALID_UTF8_IGNORE);
