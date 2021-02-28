@@ -40,19 +40,23 @@ function save() {
       _.merge(files, {
         [filename]: {
           [outer]: {
-            [inner]: innerContents
-          }
-        }
+            [inner]: innerContents,
+          },
+        },
       })
     }
   }
   let totalSize = 0
   for (const [filename, fileContents] of Object.entries(files)) {
-    const buffer = Buffer.from( JSON.stringify(fileContents, null, 2))
+    const buffer = Buffer.from(JSON.stringify(fileContents, null, 2))
     totalSize += buffer.length
     fs.writeFileSync('data/store_shards/' + filename, buffer, 'utf8')
   }
-  console.log('Written %d bytes to %d files', totalSize, Object.keys(files).length)
+  console.log(
+    'Written %d bytes to %d files',
+    totalSize,
+    Object.keys(files).length
+  )
 }
 
 const fromAmPm = (n, pm) => {
@@ -61,13 +65,7 @@ const fromAmPm = (n, pm) => {
   return n + (pm ? 12 : 0)
 }
 
-const search = (
-  x,
-  src,
-  posted,
-  metadata = {},
-  metadataUpdates = {},
-) => {
+const search = (x, src, posted, metadata = {}, metadataUpdates = {}) => {
   if (!x) return
   for (const m of x.matchAll(
     /(joinclubhouse\.com|clublink\.to)(?:\/|%2F)event(?:\/|%2F)(\w+)/g
@@ -108,7 +106,7 @@ yargs
       console.log('Fetching page', page)
       const { body } = await got(url, {
         responseType: 'json',
-      }).catch(e => {
+      }).catch((e) => {
         const body = e.response?.body
         console.error('Error:', body)
         throw e
@@ -140,8 +138,9 @@ yargs
     )
   })
   .command('update-links-from-google-forms', '', {}, async () => {
-    const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQXSyLtc98_kQzPeyxl3vqZ_XBti_RIZdnqlf7TagGK6HOaRyDeMyi-uOPDmVJ9bk4E9l8a_9OoApGE/pub?gid=1287866987&single=true&output=csv'
-    const { body: csv } = await got(url).catch(e => {
+    const url =
+      'https://docs.google.com/spreadsheets/d/e/2PACX-1vQXSyLtc98_kQzPeyxl3vqZ_XBti_RIZdnqlf7TagGK6HOaRyDeMyi-uOPDmVJ9bk4E9l8a_9OoApGE/pub?gid=1287866987&single=true&output=csv'
+    const { body: csv } = await got(url).catch((e) => {
       const body = e.response?.body
       console.error('Error:', body)
       throw e
@@ -152,14 +151,9 @@ yargs
     for (const [timestamp, record] of records) {
       const m = timestamp.match(/\d+/g)
       if (!m) continue
-      const date = new Date(Date.UTC(
-        +m[2],
-        +m[0] - 1,
-        +m[1],
-        +m[3],
-        +m[4],
-        +m[5]
-      ) - 3600e3 * 7).toJSON()
+      const date = new Date(
+        Date.UTC(+m[2], +m[0] - 1, +m[1], +m[3], +m[4], +m[5]) - 3600e3 * 7
+      ).toJSON()
       search(record, 'https://thaiclubhouse.web.app/submit.html', date)
     }
     save()
@@ -168,12 +162,16 @@ yargs
     const bearerToken = await getTwitterBearerToken()
     const searchTwitter = async (query) => {
       try {
-        const url = `https://api.twitter.com/1.1/search/tweets.json?q=${encodeURIComponent(query + ' -filter:retweets filter:links')}&result_type=recent&count=100&include_entities=true&tweet_mode=extended`
-        const { body: { statuses } } = await got(url, {
+        const url = `https://api.twitter.com/1.1/search/tweets.json?q=${encodeURIComponent(
+          query + ' -filter:retweets filter:links'
+        )}&result_type=recent&count=100&include_entities=true&tweet_mode=extended`
+        const {
+          body: { statuses },
+        } = await got(url, {
           responseType: 'json',
           headers: {
-            'Authorization': `Bearer ${bearerToken}`
-          }
+            Authorization: `Bearer ${bearerToken}`,
+          },
         }).catch(handleNetworkError('Unable to search Twitter'))
         for (const status of statuses) {
           const url = `https://twitter.com/${status.user.screen_name}/status/${status.id_str}`
@@ -182,13 +180,21 @@ yargs
             continue
           }
           for (const entity of status.entities?.urls ?? []) {
-            search(entity.expanded_url, url, date, {}, {
-              retweet_count: status.retweet_count,
-              favorite_count: status.favorite_count,
-            })
+            search(
+              entity.expanded_url,
+              url,
+              date,
+              {},
+              {
+                retweet_count: status.retweet_count,
+                favorite_count: status.favorite_count,
+              }
+            )
           }
         }
-        const minDate = statuses.map(s => new Date(s.created_at).toJSON()).reduce((a, b) => a < b ? a : b)
+        const minDate = statuses
+          .map((s) => new Date(s.created_at).toJSON())
+          .reduce((a, b) => (a < b ? a : b))
         console.log(`${query}: ${minDate}`)
       } catch (error) {
         console.error('Unable to search for "%s"', query, error)
@@ -231,7 +237,9 @@ yargs
   })
   .command('generate-store-commit-message', '', {}, async () => {
     process.stdout.write('Update data state ')
-    const bytes = +(await execa('du --bytes --summarize data/store_shards', { shell: true })).stdout.match(/\d+/)[0]
+    const bytes = +(
+      await execa('du --bytes --summarize data/store_shards', { shell: true })
+    ).stdout.match(/\d+/)[0]
     process.stdout.write('(data size: ' + (bytes / 1024).toFixed(1) + ' KB)\n')
   })
   .command('ingest-active-room', '', {}, async () => {
@@ -300,16 +308,16 @@ async function getTwitterBearerToken() {
     responseType: 'json',
     method: 'POST',
     form: {
-      grant_type: 'client_credentials'
+      grant_type: 'client_credentials',
     },
     username: process.env.TWITTER_CONSUMER_KEY,
-    password: process.env.TWITTER_CONSUMER_SECRET
+    password: process.env.TWITTER_CONSUMER_SECRET,
   }).catch(handleNetworkError('Unable to get Twitter Bearer Token'))
   return body.access_token
 }
 
 function handleNetworkError(name) {
-  return e => {
+  return (e) => {
     const body = e.response?.body
     console.error('Error:', body)
     e.message = `${name}: ${e.message}`
