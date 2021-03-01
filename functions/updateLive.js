@@ -36,9 +36,9 @@ async function updateLive() {
           const updates = {}
           updates['status'] = roomInfo.status
           if (!snapshot.child('stats_created_at').val()) {
-            updates['stats_created_at'] = Date.now()
+            updates['stats_created_at'] = new Date().toJSON()
           }
-          updates['stats_updated_at'] = Date.now()
+          updates['stats_updated_at'] = new Date().toJSON()
           if (roomInfo.info) {
             updates['info/title'] = roomInfo.info.title
             updates['info/description'] = roomInfo.info.description
