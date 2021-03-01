@@ -11,7 +11,9 @@ MANY BEST PRACTICES GETS THROWN OUT THE WINDOW!!!!
 
 require 'vendor/autoload.php';
 
-if (!file_exists('data')) die('No data directory found, please run `git clone https://github.com/clousehub/thaiclubhouse-data.git data`');
+if (!file_exists('data')) {
+    die('No data directory found, please run `git clone https://github.com/clousehub/thaiclubhouse-data.git data`');
+}
 
 $shards = [];
 foreach (glob('data/store_shards/*.json') as $filename) {
@@ -100,7 +102,7 @@ $events = array_filter(($data['events']), fn($e) => !empty($e['date']) && $crite
 $cdate = substr($v['date'], 0, 10);
         if ($cdate != $ldate) {
             ?>
-      <tr><th colspan=2><h2><?= DateFormatter::format_date($cdate) ?></h2></th></tr>
+      <tr><th colspan=2><h2><?=DateFormatter::format_date($cdate)?></h2></th></tr>
       <?php
 $ldate = $cdate;
             $ltime = '';
@@ -136,6 +138,7 @@ print_footer();
 <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#available-libraries -->
 <script src="/__/firebase/8.2.7/firebase-analytics.js"></script>
+<script src="/__/firebase/8.2.7/firebase-database.js"></script>
 
 <!-- Initialize Firebase -->
 <script src="/__/firebase/init.js"></script>
