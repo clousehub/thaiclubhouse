@@ -242,7 +242,7 @@ yargs
     ).stdout.match(/\d+/)[0]
     process.stdout.write('(data size: ' + (bytes / 1024).toFixed(1) + ' KB)\n')
   })
-  .command('ingest-active-room', '', {}, async () => {
+  .command('ingest-active-rooms', '', {}, async () => {
     const threshold = new Date(Date.now() - 3600e3)
     for (const [id, room] of Object.entries(store.rooms)) {
       const maxTime = Math.max(
