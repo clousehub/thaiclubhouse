@@ -55,7 +55,6 @@ function generate_page($target, $criteria, $socialDate, $mode)
   />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">
   <script data-ad-client="ca-pub-3695878871927537" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-  <script defer src="js/index.js"></script>
 </head>
 <body>
   <header class="introduction">
@@ -81,6 +80,15 @@ function generate_page($target, $criteria, $socialDate, $mode)
       หรือทวีตลิงค์ติดแฮชแท็ก <a href="https://twitter.com/search?q=%23ClubhouseTH">#ClubhouseTH</a> <a href="https://twitter.com/search?q=%23%E0%B9%84%E0%B8%97%E0%B8%A2%E0%B8%84%E0%B8%A5%E0%B8%B1%E0%B8%9A%E0%B9%80%E0%B8%AE%E0%B9%89%E0%B8%B2%E0%B8%AA%E0%B9%8C">#ไทยคลับเฮ้าส์</a>
       <!-- span style="opacity: 0.5">(ขณะนี้ระบบดึงข้อมูลจาก <a href="https://web.facebook.com/groups/clubhousethailandcommunity">Facebook Group</a> ขัดข้อง)</span -->
     </p>
+  </div>
+
+  <div id="now">
+    <div style="padding: 6px">
+      <h2>Live right now</h2>
+    </div>
+    <div id="now_contents" style="height: 192px; overflow: auto;">
+      <div style="text-align: center; opacity: 0.5">(Loading)</div>
+    </div>
   </div>
   <?php }?>
 
@@ -141,8 +149,20 @@ print_footer();
 <script src="/__/firebase/8.2.7/firebase-database.js"></script>
 
 <!-- Initialize Firebase -->
-<script src="/__/firebase/init.js"></script>
+<script>
+firebase.initializeApp({
+  "apiKey": "AIzaSyC-_2JuBSj4bQha02V74rdZI5jOD-ZeuNI",
+  "appId": "1:830129041327:web:a1dbd408a84d354724c95a",
+  "authDomain": "thaiclubhouse.firebaseapp.com",
+  "databaseURL": "https://thaiclubhouse-default-rtdb.europe-west1.firebasedatabase.app",
+  "measurementId": "G-VZ0STX4SHQ",
+  "messagingSenderId": "830129041327",
+  "projectId": "thaiclubhouse",
+  "storageBucket": "thaiclubhouse.appspot.com"
+});
+</script>
 <script>firebase.analytics();</script>
+<script type="module" src="js/index.js"></script>
 </body>
 <?php
 $page = ob_get_clean();
