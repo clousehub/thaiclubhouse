@@ -11,6 +11,7 @@ const metascraper = require('metascraper')([
 const fs = require('fs')
 const crypto = require('crypto')
 const execa = require('execa')
+const Table = require('cli-table')
 const got = require('got').default
 
 const store = {}
@@ -243,17 +244,45 @@ yargs
     process.stdout.write('(data size: ' + (bytes / 1024).toFixed(1) + ' KB)\n')
   })
   .command('ingest-active-room', '', {}, async () => {
-    const threshold = new Date(Date.now() - 3600e3)
+    const threshold = Date.now() - 3600e3 * 6
+    const table = new Table({
+      head: ['ID', 'Updated', 'RT', '<3'],
+      chars: { mid: '', 'left-mid': '', 'mid-mid': '', 'right-mid': '' },
+    })
+    const roomsData = {}
+
     for (const [id, room] of Object.entries(store.rooms)) {
       const maxTime = Math.max(
         ...Object.values(room.sources).map((source) =>
           Date.parse(source.created_time)
         )
       )
+      let statuses = 0
+      let hearts = 0
+      for (const [source, tweet] of Object.entries(room.sources)) {
+        statuses += (+tweet.retweet_count || 0) + 1
+        hearts += +tweet.favorite_count || 0
+      }
       if (maxTime >= threshold) {
-        console.log(id)
+        const updated = new Date(maxTime).toJSON()
+        table.push([id, updated, statuses, hearts])
+        roomsData[id] = {
+          updated_at: updated,
+          retweet_count: statuses,
+          favorite_count: hearts,
+        }
       }
     }
+
+    console.log(table.toString())
+
+    await got('https://us-central1-thaiclubhouse.cloudfunctions.net/ingest', {
+      method: 'POST',
+      json: {
+        key: process.env.LIVE_INGEST_KEY,
+        data: roomsData,
+      },
+    }).catch(handleNetworkError('Unable to ingest data'))
   })
   .parse()
 
