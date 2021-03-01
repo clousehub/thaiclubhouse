@@ -1,5 +1,6 @@
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
+const updateLive = require('./updateLive')
 
 admin.initializeApp()
 
@@ -22,3 +23,9 @@ exports.ingest = functions.https.onRequest(async (request, response) => {
     response.status(500).send('Error')
   }
 })
+
+exports.updateLiveInfo = functions.pubsub
+  .schedule('every 5 minutes')
+  .onRun(async () => {
+    await updateLive()
+  })
