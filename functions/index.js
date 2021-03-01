@@ -1,6 +1,8 @@
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
 
+admin.initializeApp()
+
 exports.ingest = functions.https.onRequest(async (request, response) => {
   if (request.body.key !== functions.config().ingest.key) {
     response.status(401).send('invalid key')
@@ -17,6 +19,6 @@ exports.ingest = functions.https.onRequest(async (request, response) => {
     response.send('OK!')
   } catch (error) {
     console.error(error)
-    response.send('Hello from Firebase!')
+    response.status(500).send('Error')
   }
 })
