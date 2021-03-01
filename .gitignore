@@ -8,3 +8,4 @@
 /public/20*
 /vendor/
 .phpunit.result.cache
+/private/

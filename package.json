@@ -16,7 +16,7 @@
     "yargs": "^16.2.0"
   },
   "volta": {
-    "node": "15.8.0"
+    "node": "15.10.0"
   },
   "devDependencies": {
     "firebase-tools": "^9.3.0"

@@ -2,7 +2,10 @@
   "rules": {
     "live": {
       ".read": true,
-      ".write": false
+      ".write": false,
+      "rooms": {
+        ".indexOn": "status"
+      }
     }
   }
 }

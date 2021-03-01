@@ -13,11 +13,20 @@
   },
   "main": "index.js",
   "dependencies": {
+    "cheerio": "^1.0.0-rc.5",
     "firebase-admin": "^9.2.0",
-    "firebase-functions": "^3.11.0"
+    "firebase-functions": "^3.11.0",
+    "got": "^11.8.2",
+    "metascraper": "^5.18.12",
+    "metascraper-description": "^5.18.12",
+    "metascraper-title": "^5.18.12",
+    "throat": "^6.0.1"
   },
   "devDependencies": {
     "firebase-functions-test": "^0.2.0"
+  },
+  "volta": {
+    "node": "15.10.0"
   },
   "private": true
 }
