@@ -1,10 +1,25 @@
 #!/bin/bash -e
 
-COMMIT_MESSAGE="$(node automation.js generate-store-commit-message)"
+mkdir -p private/git-last-updated
+find private/git-last-updated -name time -type f -mmin +60 -delete
+if [ ! -e private/git-last-updated/time ]
+then
 
-cd data
-git add store_shards
-git commit -m "$COMMIT_MESSAGE
+  COMMIT_MESSAGE="$(node automation.js generate-store-commit-message)"
 
-Disclaimer: This commit contains user-generated contents and is not moderated." || true
-git push -f
+  (
+    cd data
+    git add store_shards
+    git commit -m "$COMMIT_MESSAGE
+
+    Disclaimer: This commit contains user-generated contents and is not moderated." || true
+    git push -f
+  )
+
+  touch private/git-last-updated/time
+
+else
+
+  echo "Not update now yet..."
+
+fi
