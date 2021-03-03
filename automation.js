@@ -244,7 +244,7 @@ yargs
     process.stdout.write('(data size: ' + (bytes / 1024).toFixed(1) + ' KB)\n')
   })
   .command('ingest-active-rooms', '', {}, async () => {
-    const threshold = Date.now() - 3600e3 * 6
+    const threshold = Date.now() - 3600e3 * 6 // 24 * 3
     const table = new Table({
       head: ['ID', 'Updated', 'RT', '<3'],
       chars: { mid: '', 'left-mid': '', 'mid-mid': '', 'right-mid': '' },
