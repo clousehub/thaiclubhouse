@@ -43,7 +43,12 @@ function LiveTable({ data }) {
       </thead>
       <tbody>
         ${entries.map(
-          (entry) => html`<tr key=${entry.id}>
+          (entry) => html`<tr
+            key=${entry.id}
+            onClick=${() => {
+              console.log(entry)
+            }}
+          >
             <td style="text-align: right">
               ${entry.room.info.participants} ${String.fromCharCode(160)}
             </td>
