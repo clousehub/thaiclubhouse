@@ -5,7 +5,9 @@
 /.firebase
 *.log
 /public/index.html
+/public/live.html
 /public/20*
 /vendor/
 .phpunit.result.cache
 /private/
+/live/
