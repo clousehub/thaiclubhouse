@@ -38,24 +38,28 @@ function LiveTable({ data }) {
       <col width="64" />
       <col width="100%" />
       <thead>
-        <th style="text-align: right">👤</th>
+        <th style="text-align: right">👤 ${String.fromCharCode(160)}</th>
         <th>Topic</th>
       </thead>
       <tbody>
         ${entries.map(
           (entry) => html`<tr key=${entry.id}>
-            <td style="text-align: right">${entry.room.info.participants}</td>
+            <td style="text-align: right">
+              ${entry.room.info.participants} ${String.fromCharCode(160)}
+            </td>
             <td>
               <strong>
                 <a href=${'https://www.joinclubhouse.com/room/' + entry.id}>
                   ${entry.room.info.title}
                 </a>
               </strong>
+              <!--
               <div
                 style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
               >
                 ${entry.room.info.description.replace(/^With/, 'with')}
               </div>
+              -->
             </td>
           </tr>`
         )}
